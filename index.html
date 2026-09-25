@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Invitation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 bg-pink-100 font-sans">
+
+    <div id="app" class="bg-white/90 p-8 rounded-2xl shadow-xl max-w-sm w-full text-center border border-pink-200">
+        <!-- Content injected here -->
+    </div>
+
+    <script>
+        const app = document.getElementById('app');
+        
+        // Data store to remember user choices
+        const state = {
+            date: '',
+            time: '',
+            food: ''
+        };
+
+        function renderStep1() {
+            app.innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Will you go on a date with Joshua? 🌸</h2>
+                <div class="flex justify-center gap-4">
+                    <button onclick="renderStep2()" class="bg-pink-500 hover:bg-pink-600 text-white font-bold px-6 py-3 rounded-full transition-all">YES ♥</button>
+                    <button id="no-btn" onmouseover="moveNoButton()" class="bg-gray-200 text-gray-700 font-bold px-6 py-3 rounded-full transition-all absolute">no 😭</button>
+                </div>
+            `;
+        }
+
+        function moveNoButton() {
+            const btn = document.getElementById('no-btn');
+            btn.style.position = 'relative';
+            btn.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
+        }
+
+        function renderStep2() {
+            app.innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">WAIT, REALLY? 😭</h2>
+                <button onclick="renderStep3()" class="bg-pink-500 text-white px-6 py-3 rounded-full w-full">Let's plan it!</button>
+            `;
+        }
+
+        function renderStep3() {
+            app.innerHTML = `
+                <h2 class="text-xl font-bold mb-4">When are you free?</h2>
+                <input type="date" id="date-input" class="w-full p-2 border rounded-lg mb-2">
+                <select id="time-input" class="w-full p-2 border rounded-lg mb-4">
+                    <option>6:00 PM</option>
+                    <option>7:00 PM</option>
+                    <option>8:00 PM</option>
+                </select>
+                <button onclick="saveDate()" class="bg-pink-500 text-white px-6 py-3 rounded-full w-full">Next</button>
+            `;
+        }
+
+        function saveDate() {
+            state.date = document.getElementById('date-input').value;
+            state.time = document.getElementById('time-input').value;
+            if(!state.date) return alert("Please pick a date!");
+            renderStep4();
+        }
+
+        function renderStep4() {
+            app.innerHTML = `
+                <h2 class="text-xl font-bold mb-4">What's the vibe?</h2>
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    ${['🍕 Pizza', '🍣 Sushi', '🍔 Burgers', '🍜 Ramen'].map(f => 
+                        `<button onclick="selectFood('${f}')" class="food-opt p-3 border rounded-lg hover:border-pink-500">${f}</button>`
+                    ).join('')}
+                </div>
+            `;
+        }
+
+        function selectFood(food) {
+            state.food = food;
+            renderStep5();
+        }
+
+        function renderStep5() {
+            app.innerHTML = `
+                <h2 class="text-lg font-bold mb-4">Confirming for ${state.date} at ${state.time} for ${state.food}.</h2>
+                <div class="bg-pink-50 p-4 rounded-xl mb-4 border border-pink-200">
+                    <p class="text-sm">Date Agreement™ Fee: <strong>GHC150</strong></p>
+                </div>
+                <button onclick="finish()" class="bg-pink-600 text-white w-full py-3 rounded-full font-bold">Pay GHC150 & Confirm</button>
+            `;
+        }
+
+        function finish() {
+            // This creates a message you can actually use
+            const msg = `Accepted! Date: ${state.date}, Time: ${state.time}, Food: ${state.food}. Kyle is ready!`;
+            console.log(msg);
+            alert("Transaction approved! " + msg);
+            app.innerHTML = `<h2 class="text-2xl font-bold">See you then! 💖</h2>`;
+        }
+
+        renderStep1();
+    </script>
+</body>
+</html>
